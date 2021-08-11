@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Zendesk Example Page">
+    <meta name="author" content="Willian Soares">
+
+    <title>Zendesk Example Page</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <style>
+        body {
+            background-color: #1E1E1E;
+            color: #fff;
+            font-family: monospace;
+        }
+    </style>
+
+    <script>
+        window.addEventListener("load", function(event) {
+            setTimeout(function(){
+                
+                $("#divLoading").fadeOut("normal",function(){
+                    $("#divFrame").fadeIn("normal",function(){
+                        document.getElementById("frameApp").src = "./mbmapp.html";
+                    });
+                });
+
+            },2000);
+        });
+    </script>
+</head>
+<body>
+
+    <table border=0 width="100%">
+
+        <tr>
+            <td colspan=2 style="height:250px;margin:30px;border: 1px solid #c0c0c0; text-align: center;">
+                <h1>Nothing here...</h1>
+            </td>
+        </tr>
+        <tr>
+            <td style="margin:30px;border: 1px solid #c0c0c0; text-align: center;" width="70%">
+                <h1>Nothing here...</h1>
+            </td>
+            <td width="30%" style="text-align: center;">
+                <div id="divFrame" style="display: none;">
+                    <iframe id="frameApp" style="border:none;background-color: #1E1E1E; width:100%; height:300px"></iframe>
+                </div>
+                <div id="divLoading">
+                    <br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;
+                    <br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;
+                    Loading...
+                    <br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;
+                    <br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;
+                </div>
+            </td>
+        </tr>
+
+    </table>
+
+</body>
+</html>

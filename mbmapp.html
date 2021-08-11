@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Zendesk MBM App">
+    <meta name="author" content="Willian Soares">
+
+    <title>Zendesk MBM App</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <style>
+        body {
+            background-color: #EAEAEA;
+            color: #383838;
+            font-family: Tahoma, sans-serif;
+        }
+
+        .yellowSignal {
+            background-color: #F9FF66;
+        }
+
+        .marginTop {
+            padding-top: 10px;
+        }
+    </style>
+
+    <script>
+        var currentPage = "divAcesso";
+
+        btnAcessarClick = function() {
+            var cod_clifor = $.trim($("#cod_clifor").val());
+            var cli_senha  = $.trim($("#cli_senha").val());
+
+            if (cod_clifor == "") 
+                mbmAlertEdit("cod_clifor");
+            else if (cli_senha == "")
+                mbmAlertEdit("cli_senha");
+            else {
+                mbmDisableLoginForm();
+                setTimeout(function(){
+                    mbmGoTo("divModulos");
+                    // mbmEnableLoginForm();
+                },2000);
+            }            
+        }
+
+        btnADMClick = function() {
+            mbmGoTo("divOpcoesADM");
+        }
+
+        btnBuscarPedidosClick = function() {
+            var cod_empresa     = $.trim($("#cod_empresa").val());
+            var cod_pedidovenda = $.trim($("#cod_pedidovenda").val());
+
+            if (cod_pedidovenda=="")
+                mbmAlertEdit("cod_pedidovenda");
+            else {
+                mbmDisableBuscaPedidoForm();
+                setTimeout(function(){
+
+                },1000);
+            }
+        }
+
+        btnFINClick = function() {
+            mbmGoTo("divOpcoesFIN");
+        }
+
+        cod_cliforKeyUp = function(event) {
+            $("#cod_clifor").removeClass("yellowSignal");
+            if ( event.which == 13 ) {
+                event.preventDefault();
+                $("#cli_senha").focus();
+            }
+        }
+
+        cli_senhaKeyUp = function(event) {
+            $("#cli_senha").removeClass("yellowSignal");
+            if ( event.which == 13 ) {
+                event.preventDefault();
+                btnAcessarClick();
+            }
+        }
+
+        lkBackFromModulesClick = function() {
+            mbmGoTo("divModulos");
+        }
+
+        lkAcompPedidoClick = function() {
+            mbmEnableBuscaPedidoForm();
+            $("#cod_empresa").val("");
+            $("#cod_pedidovenda").val("");
+            mbmGoTo("divAcompPedido",function(){
+                $("#cod_empresa").focus();
+            });
+        }
+
+        lkBackToADMOptionsClick = function() {
+            mbmGoTo("divOpcoesADM");
+        }
+
+        mbmAlertEdit = function(componentID) {
+            $("#"+componentID).addClass("yellowSignal");
+            $("#"+componentID).focus();
+        }
+
+        mbmConnectAllEvents = function() {
+            $("#btnAcessar").click(btnAcessarClick);
+            $("#btnADM").click(btnADMClick);
+            $("#btnBuscarPedidos").click(btnBuscarPedidosClick);
+            $("#btnFIN").click(btnFINClick);
+            $("#cod_clifor").keyup(cod_cliforKeyUp);
+            $("#cli_senha").keyup(cli_senhaKeyUp);
+            $(".lkBackFromModules").click(lkBackFromModulesClick);
+            $(".lkBackToADMOptions").click(lkBackToADMOptionsClick);
+            $("#lkAcompPedido").click(lkAcompPedidoClick);            
+            $("#lkLogout").click(mbmLogout);
+        };
+
+        mbmDisableBuscaPedidoForm = function() {
+            mbmDisableForm("pedido_form", "btnBuscarPedidos", "Consultando...");
+        }
+
+        mbmDisableForm = function(classForm, actionButton, actionFrase) {
+            $("."+classForm).attr("disabled","true");
+            $("#"+actionButton).html("<i class='glyphicon glyphicon-time'></i> "+actionFrase);
+            $("#"+actionButton).removeClass("btn-primary");
+            $("#"+actionButton).addClass("btn-default");            
+        }
+
+        mbmDisableLoginForm = function() {
+            mbmDisableForm("login_form", "btnAcessar", "Verificando...");
+        }
+
+        mbmEnableBuscaPedidoForm = function() {
+            mbmEnableForm("pedido_form", "btnBuscarPedidos", "Buscar...");
+        }
+
+        mbmEnableForm = function(classForm, actionButton, actionName) {
+            $("."+classForm).removeAttr("disabled");
+            $("#"+actionButton).html("<i class='glyphicon glyphicon-ok'></i> "+actionName);
+            $("#"+actionButton).addClass("btn-primary");
+            $("#"+actionButton).removeClass("btn-default");
+        }
+
+        mbmEnableLoginForm = function() {
+            mbmEnableForm("login_form", "btnAcessar", "Acessar");
+        }
+
+        mbmGoTo = function(toPage, callback) {
+            $("#"+currentPage).fadeOut("fast",function(){
+                $("#"+toPage).fadeIn("fast",function(){
+                    currentPage = toPage;
+                    if (typeof(callback)=="function") {
+                        callback();
+                    }
+                });
+            });
+        }
+
+        mbmLogout = function() {
+            $("#cod_clifor").val("");
+            $("#cli_senha").val("");
+            mbmEnableLoginForm();
+            mbmGoTo("divAcesso",function(){
+                $("#cod_clifor").focus();
+            });
+        }
+
+        window.addEventListener("load", function(event) {
+            $("#cod_clifor").focus();
+            mbmConnectAllEvents();
+        });
+    </script>
+</head>
+<body>
+
+    <div id="divAcesso">
+        <div class="panel panel-default">
+            <div class="panel-body"><strong>Bem vindo!</strong><br />Faça login com sua senha de cliente MBM para continuar.</div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input id="cod_clifor" type="text" class="form-control login_form" placeholder="Código">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                    <input id="cli_senha" type="password" class="form-control login_form" placeholder="Senha">
+                </div>
+                <div class="input-group marginTop">
+                    <button id="btnAcessar" class="btn btn-primary login_form"><i class="glyphicon glyphicon-ok"></i> Acessar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="divModulos" style="display:none">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <a href="javascript:void(0)" title="Logoff" alt="Logoff" id="lkLogout" class="close" aria-label="close">&times;</a>
+                Olá <strong>MBM Solutions</strong><br />Escolha um módulo para continuar.
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-6" style="text-align: center;">
+                        <button id="btnADM" class="btn btn-primary btn-lg">
+                            <i class="glyphicon glyphicon-home"></i><br />
+                            MBMADM
+                        </button>
+                    </div>
+                    <div class="col-xs-6" style="text-align: center;">
+                        <button id="btnFIN" class="btn btn-success btn-lg">
+                            <i class="glyphicon glyphicon-usd"></i><br />
+                            MBMFIN
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="divOpcoesADM" style="display:none">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <a href="javascript:void(0)" title="Voltar" alt="Voltar" class="close lkBackFromModules" aria-label="back"><i class="glyphicon glyphicon-circle-arrow-left"></i></a>
+                <strong>MBMADM</strong><br />Escolha uma opção para continuar.
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="alert alert-info">
+                    <strong><i class="glyphicon glyphicon-shopping-cart"></i></strong> <a id="lkAcompPedido" href="javascript:void(0)" class="alert-link"> Acompanhar meu pedido</a>
+                </div>
+                <div class="alert alert-info">
+                    <strong><i class="glyphicon glyphicon-send"></i></strong> <a href="javascript:void(0)" class="alert-link"> Solicitar 2a. via da NFe</a>
+                </div>
+                <div class="alert alert-info">
+                    <strong><i class="glyphicon glyphicon-stats"></i></strong> <a href="javascript:void(0)" class="alert-link"> Consultar disponibilidade de estoque</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="divOpcoesFIN" style="display:none">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <a href="javascript:void(0)" title="Voltar" alt="Voltar" class="close lkBackFromModules" aria-label="back"><i class="glyphicon glyphicon-circle-arrow-left"></i></a>
+                <strong>MBMFIN</strong><br />Escolha uma opção para continuar.
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="alert alert-success">
+                    <strong><i class="glyphicon glyphicon-usd"></i></strong> <a href="javascript:void(0)" class="alert-link"> Solicitar 2a. via do Boleto</a>
+                </div>
+                <div class="alert alert-success">
+                    <strong><i class="glyphicon glyphicon-question-sign"></i></strong> <a href="javascript:void(0)" class="alert-link"> Consultar situação título</a>
+                </div>
+                <div class="alert alert-success">
+                    <strong><i class="glyphicon glyphicon-search"></i></strong> <a href="javascript:void(0)" class="alert-link"> Checar pendências financeiras</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="divAcompPedido" style="display:none">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <a href="javascript:void(0)" title="Voltar" alt="Voltar" class="close lkBackToADMOptions" aria-label="back"><i class="glyphicon glyphicon-circle-arrow-left"></i></a>
+                <strong>MBMADM</strong><br />Acompanhamento de Pedidos
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                    <input id="cod_empresa" type="text" class="form-control pedido_form" placeholder="Empresa">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-tags"></i></span>
+                    <input id="cod_pedidovenda" type="text" class="form-control pedido_form" placeholder="Pedido">
+                </div>
+                <div class="input-group marginTop">
+                    <button id="btnBuscarPedidos" class="btn btn-primary pedido_form"><i class="glyphicon glyphicon-ok"></i> Buscar...</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
